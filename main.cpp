@@ -18,16 +18,17 @@
 
 using namespace std;
 
-GLfloat eye[] = { 5.0, 6.0, 5.0 };
-GLfloat to[] = { 0.0, 4.0, 0.0 };
-GLfloat up[] = { -2, 1, -2 };
-
-const GLuint SCREEN_WIDTH = 640;
+const GLuint SCREEN_WIDTH = 480;
 const GLuint SCREEN_HEIGHT = 480;
 
 const GLfloat TABLE_WIDTH = 2.0f;  // x
 const GLfloat TABLE_LENGTH = 4.0f; // y
 const GLfloat TABLE_HEIGHT = 4.0f; // z
+
+GLfloat eye[] = { 0.0, TABLE_HEIGHT * 1.5, 6.0 };
+GLfloat to[] = { 0.0, 0, -TABLE_LENGTH / 2.0 };
+GLfloat up[] = { 0.0f, 3.0f, -1.0f };
+GLfloat angle = 0.0;
 
 const GLfloat GOAL_LENGTH = 0.8f;
 
@@ -49,6 +50,13 @@ GLfloat mat_shininess[] = { 150.0f };
 Puck* puck;
 Mallet* player;
 Mallet* aiPlayer;
+GLfloat playerX, playerZ;
+
+const GLfloat MAX_MALLET_X = (TABLE_WIDTH - MALLET_DIAMETER) / 2;
+const GLfloat MIN_MALLET_X = - MAX_MALLET_X;
+
+const GLfloat MAX_MALLET_Z = (TABLE_LENGTH - MALLET_DIAMETER) / 2;
+const GLfloat MIN_MALLET_Z = (MALLET_DIAMETER) / 2;
 
 GLuint floorTexture;
 BMP* floorBMP;
@@ -71,7 +79,7 @@ void init() {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 		glTexImage2D(GL_TEXTURE_2D, 0, 3, floorBMP->GetW(), floorBMP->GetH(), 
-			0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+			0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixels);
 		glShadeModel(GL_FLAT);
 	}
 
@@ -101,18 +109,58 @@ void drawCube(GLfloat x, GLfloat y, GLfloat z) {
 }
 
 void drawWall() {
-	glColor3f(0.6f, 0.6f, 0.6f);
-
+	
+	// Left Wall
 	glPushMatrix();
-	glTranslated(TABLE_WIDTH / 2.0, 2.0, 0);
-	drawCube(WALL_THICK, WALL_THICK, TABLE_LENGTH + 2 * WALL_THICK);
+	// table wall on the ground
+	glColor3d(0.2, 0.2, 0.2);
+	glTranslated( (TABLE_WIDTH + WALL_THICK)/2.0, 0, 0);
+	drawCube(WALL_THICK, TABLE_HEIGHT, TABLE_LENGTH);
+	// table edge on the wall
+	glColor3d(0.6, 0.6, 0.6);
+	glTranslated(0.0, (TABLE_HEIGHT + WALL_THICK) / 2.0, 0.0);
+	drawCube(WALL_THICK, WALL_THICK, TABLE_LENGTH);
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslated(-TABLE_WIDTH / 2.0, 2.0, 0);
-	drawCube(WALL_THICK, WALL_THICK, TABLE_LENGTH + 2 * WALL_THICK);
+	// table wall on the ground
+	glColor3d(0.2, 0.2, 0.2);
+	glTranslated(-(TABLE_WIDTH + WALL_THICK) / 2.0, 0, 0);
+	drawCube(WALL_THICK, TABLE_HEIGHT, TABLE_LENGTH);
+	// table edge on the wall
+	glColor3d(0.6, 0.6, 0.6);
+	glTranslated(0, (TABLE_HEIGHT + WALL_THICK) / 2.0, 0);
+	drawCube(WALL_THICK, WALL_THICK, TABLE_LENGTH);
 	glPopMatrix();
 
+	// length of wall beside the goal
+	GLdouble length = (TABLE_WIDTH - GOAL_LENGTH) / 2.0 + WALL_THICK;
+
+	glPushMatrix();
+	// table wall on the ground
+	glColor3d(0.2, 0.2, 0.2);
+	glTranslated(0, 0, (TABLE_LENGTH + WALL_THICK) / 2.0);
+	drawCube(TABLE_WIDTH + 2 * WALL_THICK, TABLE_HEIGHT, WALL_THICK);
+	// table edge on the wall with Goal
+	glColor3d(0.6, 0.6, 0.6);
+	glTranslated((GOAL_LENGTH + length)/2, (TABLE_HEIGHT + WALL_THICK) / 2.0, 0);
+	drawCube(length, WALL_THICK, WALL_THICK);
+	glTranslated(-(GOAL_LENGTH + length), 0, 0);
+	drawCube(length, WALL_THICK, WALL_THICK);
+	glPopMatrix();
+
+	glPushMatrix();
+	// table wall on the ground
+	glColor3d(0.2, 0.2, 0.2);
+	glTranslated(0, 0, -(TABLE_LENGTH - WALL_THICK) / 2.0);
+	drawCube(TABLE_WIDTH + 2 * WALL_THICK, TABLE_HEIGHT, WALL_THICK);
+	// table edge on the wall with Goal
+	glColor3d(0.6, 0.6, 0.6);
+	glTranslated((GOAL_LENGTH + length)/2, (TABLE_HEIGHT + WALL_THICK) / 2.0, 0);
+	drawCube(length, WALL_THICK, WALL_THICK);
+	glTranslated(-(GOAL_LENGTH + length), 0, 0);
+	drawCube(length, WALL_THICK, WALL_THICK);
+	glPopMatrix();
 }
 
 void drawFloor() {
@@ -120,10 +168,10 @@ void drawFloor() {
 	glBindTexture(GL_TEXTURE_2D, floorTexture);
 
 	glBegin(GL_QUADS);
-	glTexCoord2f(0, 0); glVertex3d(-16, -1, -10);
-	glTexCoord2f(0, 1); glVertex3d(10, -1, -10);
-	glTexCoord2f(1, 1); glVertex3d(10, -1, 4);
-	glTexCoord2f(1, 0); glVertex3d(-16, -1, 4);
+	glTexCoord2f(0, 0); glVertex3d(-16, -1, -16);
+	glTexCoord2f(0, 1); glVertex3d(16, -1, -16);
+	glTexCoord2f(1, 1); glVertex3d(16, -1, 16);
+	glTexCoord2f(1, 0); glVertex3d(-16, -1, 16);
 	glEnd();
 
 	glDisable(GL_TEXTURE_2D);
@@ -131,10 +179,9 @@ void drawFloor() {
 
 void drawTable() {
 	glPushMatrix();
+	glColor3d(0.2, 0.7, 0.2);
 	drawCube(TABLE_WIDTH, TABLE_HEIGHT, TABLE_LENGTH);
 	glPopMatrix();
-
-	drawWall();
 }
 
 void display() {
@@ -143,18 +190,18 @@ void display() {
 	
 	glLoadIdentity();
 	gluLookAt(eye[0], eye[1], eye[2], to[0], to[1], to[2], up[0], up[1], up[2]);
-	
+	glRotatef(angle, 0, 1, 0);
+	drawFloor();
 	drawTable();
 	drawWall();
-	drawFloor();
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(40, 1, 1, 100);
-	glMatrixMode(GL_MODELVIEW);
-
 	player->draw();
 	aiPlayer->draw();
-	puck->draw();
+	// to do
+	// puck->draw();
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(45, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 100);
 
 	glFlush();
 	glutSwapBuffers();
@@ -165,7 +212,7 @@ void reshape(int width, int height) {
 	if (height == 0) height = 1;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(70, (GLfloat)width / height, 0.1, 30);
+	gluPerspective(45, (GLfloat)width / height, 0.1, 30);
 }
 
 void keyboardFunc(unsigned char key, int x, int y) {
@@ -174,15 +221,48 @@ void keyboardFunc(unsigned char key, int x, int y) {
 	case 27: case 'q': case 'Q':
 		exit(0);
 		break;
-
+	case 'a':
+		angle += 10.0f;
+		if (angle > 90.0) angle = 90.0;
+		break;
+	case'd':
+		angle -= 10.0f;
+		if (angle < -90.0) angle = -90.0;
+		break;
 	default:
 		break;
 	}
 	glutPostRedisplay();
 }
 
-void mouseFunc(int , int , int , int) {
+void mouseFunc(int x, int y) {
+	GLint viewport[4];
+	GLdouble modelview[16];
+	GLdouble projection[16];
+	GLfloat winX, winY, winZ;
+	GLdouble posX, posY, posZ;
 
+	glPushMatrix();
+	glRotated(angle, 0, 1, 0);
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+	glGetDoublev(GL_PROJECTION_MATRIX, projection);
+	glPopMatrix();
+
+	winX = x;
+	winY = viewport[3] - (GLfloat)y;
+	glReadPixels((int)winX, (int)winY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
+	gluUnProject(winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
+	playerX = posX;
+	playerZ = posZ;
+
+	playerX = max(playerX, MIN_MALLET_X);
+	playerX = min(playerX, MAX_MALLET_X);
+	playerZ = max(playerZ, MIN_MALLET_Z);
+	playerZ = min(playerZ, MAX_MALLET_Z);
+
+	player->update(playerX, playerZ, puck->getX(), puck->getY(), puck->getRadius());
+	glutPostRedisplay();
 }
 
 void idleFunc() {
@@ -191,9 +271,19 @@ void idleFunc() {
 
 int main(int argc, char **argv) {
 	srand((unsigned)time(NULL));
+	aiPlayer = new Mallet(TABLE_HEIGHT);
+	aiPlayer->setColor(0.7, 0.2, 0.2);
+	aiPlayer->setParameter(MALLET_DIAMETER / 2, MALLET_HEIGHT);
+	aiPlayer->setPosition(0, TABLE_HEIGHT/2, MALLET_DIAMETER - TABLE_LENGTH / 2);
+
 	player = new Mallet();
-	aiPlayer = new Mallet();
+	player->setColor(0.2, 0.7, 0.2);
+	player->setParameter(MALLET_DIAMETER / 2, MALLET_HEIGHT);
+	player->setPosition(0, TABLE_HEIGHT/2 , TABLE_LENGTH / 2 - MALLET_DIAMETER);
+
 	puck = new Puck();
+	puck->setPosition(0, TABLE_HEIGHT, TABLE_LENGTH/2);
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowPosition(200, 200);
@@ -203,7 +293,7 @@ int main(int argc, char **argv) {
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboardFunc);
-	glutMouseFunc(mouseFunc);
+	glutPassiveMotionFunc(mouseFunc);
 	glutIdleFunc(idleFunc);
 	glutMainLoop();
 	return 0;

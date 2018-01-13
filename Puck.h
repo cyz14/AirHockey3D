@@ -17,6 +17,7 @@ public:
 	GLfloat getX() { return x; }
 	GLfloat getY() { return y; }
 	GLfloat getZ() { return z; }
+	GLfloat getRadius() { return radius; }
 	void setPosition(GLfloat ax, GLfloat ay, GLfloat az);
 };
 

@@ -7,15 +7,18 @@ class Mallet
 	GLfloat x, y, z;
 	GLfloat radius;
 	GLfloat height;
-	GLubyte r, g, b;
+	GLdouble r, g, b;
 	GLUquadricObj* objCylinder, *objDisk0, *objDisk1;
 public:
 	Mallet();
+	Mallet(GLfloat a_y);
 	Mallet(GLfloat a_x, GLfloat a_y, GLfloat a_z);
 	~Mallet();
 
+	void setParameter(GLfloat aRadius, GLfloat aHeight);
+	void setPosition(GLfloat a_x, GLfloat a_z);
 	void setPosition(GLfloat a_x, GLfloat a_y, GLfloat a_z);
-	void setColor(GLubyte a_r, GLubyte a_g, GLubyte a_b);
+	void setColor(GLdouble a_r, GLdouble a_g, GLdouble a_b);
 	void draw();
 	void update(GLfloat newx, GLfloat newz, GLfloat px, GLfloat pz, GLfloat pr);
 };

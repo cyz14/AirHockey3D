@@ -81,26 +81,14 @@ void BMP::Input( std::string file ) {
 	}
 	
 	Allocate( strInfo.biHeight , strInfo.biWidth );
-	/*for(int i = 0 ; i < strInfo.biHeight ; i++ )
-		for(int j = 0 ; j < strInfo.biWidth ; j++ ) {
-			fread( &ima[i][j].blue , 1 , sizeof( byte ) , fpi );
-			fread( &ima[i][j].green , 1 , sizeof( byte ) , fpi );
-			fread( &ima[i][j].red , 1 , sizeof( byte ) , fpi );
-		}*/
+
 	int bitsize = strInfo.biSizeImage;
 	if (bitsize == 0)
 		bitsize = (strInfo.biWidth *
 		strInfo.biBitCount + 7) / 8 *
 		abs(strInfo.biHeight);
-	int byteread = fread(ima, 1, bitsize, fpi);
-	/*for (int i = 0; i < strInfo.biHeight; i++)
-		for (int j = 0; j < strInfo.biWidth; j++) {
-			fread(&ima[i][j].blue, 1, sizeof(byte), fpi);
-			fread(&ima[i][j].green, 1, sizeof(byte), fpi);
-			fread(&ima[i][j].red, 1, sizeof(byte), fpi);
-			byteread += 3;
-		}*/
 
+	int byteread = fread(ima, 1, bitsize, fpi);
 	if (byteread < bitsize) {
 		printf("Failed to read image data.\n");
 		fclose(fpi);
@@ -110,35 +98,7 @@ void BMP::Input( std::string file ) {
 	fclose( fpi );
 }
 
-//void BMP::Output( std::string file ) {
-//	FILE *fpw;
-//	errno_t err;
-//	if ((err = fopen_s(&fpw, file.c_str(), "wb")) != 0) {
-//		printf("Failed to open file %s\n", file.c_str());
-//		exit(-1);
-//	}
-//
-//	fwrite( &strHead , 1 , sizeof( BITMAPFILEHEADER ) , fpw );
-//	fwrite( &strInfo , 1 , sizeof( BITMAPINFOHEADER ) , fpw );
-//
-//	for ( int i = 0 ; i < strInfo.biHeight ; i++ )
-//		for ( int j = 0 ; j < strInfo.biWidth ; j++ ) {
-//			fwrite( &ima[i][j].blue , 1 , sizeof( byte ) , fpw );
-//			fwrite( &ima[i][j].green , 1 , sizeof( byte ) , fpw );
-//			fwrite( &ima[i][j].red , 1 , sizeof( byte ) , fpw );
-//		}
-//	
-//	fclose( fpw );
-//}
-
 GLubyte* BMP::GetPixels() { 
 	return (GLubyte *)ima;
 }
-
-//void BMP::SetColor( int i , int j , Color col ) {
-//	ima[i][j].red = ( int ) ( col.r * 255 );
-//	ima[i][j].green = ( int ) ( col.g * 255 );
-//	ima[i][j].blue = ( int ) ( col.b * 255 );
-//}
-
 
