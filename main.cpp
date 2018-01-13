@@ -235,6 +235,7 @@ void keyboardFunc(unsigned char key, int x, int y) {
 	glutPostRedisplay();
 }
 
+// http://www.yovisun.com/archive/opengl-gluunproject-original.html
 void mouseFunc(int x, int y) {
 	GLint viewport[4];
 	GLdouble modelview[16];
@@ -243,14 +244,22 @@ void mouseFunc(int x, int y) {
 	GLdouble posX, posY, posZ;
 
 	glPushMatrix();
+	// repear operations in display()
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(eye[0], eye[1], eye[2], to[0], to[1], to[2], up[0], up[1], up[2]);
 	glRotated(angle, 0, 1, 0);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(45, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 100);
+
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
 	glGetDoublev(GL_PROJECTION_MATRIX, projection);
 	glPopMatrix();
 
 	winX = x;
-	winY = viewport[3] - (GLfloat)y;
+	winY = viewport[3] - (GLfloat)y; // viewport[3] is screen height
 	glReadPixels((int)winX, (int)winY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
 	gluUnProject(winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
 	playerX = posX;
