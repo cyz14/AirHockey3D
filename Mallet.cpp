@@ -1,8 +1,5 @@
 #include "Mallet.h"
 
-int SLICES_NUMBER = 20;
-int STACKS_NUMBER = 10;
-
 Mallet::Mallet()
 	: x(0.0f), y(0.0f), z(0.0f),
 	objCylinder (NULL), objDisk0(NULL), objDisk1(NULL) {
