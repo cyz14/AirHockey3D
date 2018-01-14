@@ -8,7 +8,7 @@ class Mallet
 	GLfloat radius;
 	GLfloat height;
 	GLdouble r, g, b;
-	GLUquadricObj* objCylinder, *objDisk0, *objDisk1;
+	GLUquadricObj* objCylinder, *objDisk;
 
     GLint SLICES_NUMBER = 20, STACKS_NUMBER = 10;
 
