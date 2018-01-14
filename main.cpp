@@ -41,6 +41,8 @@ const GLfloat PUCK_HEIGHT = 0.1f;
 const GLfloat MALLET_DIAMETER = 0.3f;
 const GLfloat MALLET_HEIGHT = 0.1f;
 
+GLfloat light_ambient[] = {0.5f, 0.5f, 0.5f, 1.0f};
+GLfloat light_diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 GLfloat light_position[] = { 0.0f, 2.0f, 3.0f, 0.0f };
 GLfloat mat_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLfloat mat_ambient[] = { 0.7f, 0.7f, 0.7f, 1.0f };
@@ -92,9 +94,11 @@ void init() {
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat_shininess);
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, light_ambient);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse);
+	glLightfv(GL_LIGHT1, GL_POSITION, light_position);
 	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
 	glEnable(GL_AUTO_NORMAL);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_COLOR_MATERIAL);
