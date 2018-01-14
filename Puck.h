@@ -9,15 +9,18 @@ class Puck
 	GLfloat r, g, b;
 	GLfloat radius;
 	GLfloat height;
+	GLfloat dx, dz;
 	GLUquadricObj* objCylinder, *objDisk;
 
 	GLint SLICES_NUMBER = 20, STACKS_NUMBER = 10;
+	GLfloat SPEED = 0.03f;
 
 public:
 	Puck();
 	~Puck();
 
 	void draw();
+	void move();
 	GLfloat getX() { return x; }
 	GLfloat getY() { return y; }
 	GLfloat getZ() { return z; }

@@ -281,6 +281,12 @@ void idleFunc() {
 
 }
 
+void onTimer(int) {
+	puck->move();
+	glutPostRedisplay();
+	glutTimerFunc(16, onTimer, 1);
+}
+
 int main(int argc, char **argv) {
 	srand((unsigned)time(NULL));
 	aiPlayer = new Mallet(TABLE_HEIGHT);
@@ -309,6 +315,7 @@ int main(int argc, char **argv) {
 	glutKeyboardFunc(keyboardFunc);
 	glutPassiveMotionFunc(mouseFunc);
 	glutIdleFunc(idleFunc);
+	glutTimerFunc(16, onTimer, 1);
 	glutMainLoop();
 	return 0;
 }

@@ -1,12 +1,13 @@
 #include "Puck.h"
 
 Puck::Puck()
-    : x(0.0f), y(0.0f), z(0.0f),
+    : x(0.0f), y(0.0f), z(0.0f), dx(0.0f), dz(0.0f),
     objCylinder(NULL), objDisk(NULL) {
     objCylinder = gluNewQuadric();
     objDisk = gluNewQuadric();
     radius = height = 0.0f;
     r = g = b = 0.3;
+	dz = -SPEED;
 }
 
 
@@ -25,6 +26,11 @@ void Puck::draw() {
         gluCylinder(objCylinder, radius, radius, height, SLICES_NUMBER, STACKS_NUMBER);
         gluDisk(objDisk, 0.0f, radius, SLICES_NUMBER, STACKS_NUMBER);
     glPopMatrix();
+}
+
+void Puck::move() {
+    x += dx;
+    z += dz;
 }
 
 void Puck::setPosition(GLfloat ax, GLfloat ay, GLfloat az) {
