@@ -30,6 +30,12 @@
     <ClCompile Include="color.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Wall.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2d.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -45,6 +51,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="color.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2d.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

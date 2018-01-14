@@ -4,6 +4,7 @@
 #include <GL\GLU.h>
 #include <vector>
 #include "Mallet.h"
+#include "Wall.h"
 
 class Puck
 {
@@ -14,6 +15,7 @@ class Puck
 	GLfloat dx, dz;
 	GLUquadricObj* objCylinder, *objDisk;
 	std::vector<Mallet*> mallets;
+	std::vector<Wall*> walls;
 
 	GLint SLICES_NUMBER = 20, STACKS_NUMBER = 10;
 	GLfloat SPEED = 0.03f;
@@ -33,5 +35,9 @@ public:
 	void setColor(GLdouble a_r, GLdouble a_g, GLdouble a_b);
 
 	void addMallet(Mallet*);
+	void addWall(Wall*);
+
+	bool collide(Wall* w);
+	void reflect(Wall* w);
 };
 

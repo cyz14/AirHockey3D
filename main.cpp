@@ -15,6 +15,7 @@
 #include <ctime>
 #include <algorithm>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -63,7 +64,45 @@ const GLfloat MIN_MALLET_Z = (MALLET_DIAMETER) / 2;
 GLuint floorTexture;
 BMP* floorBMP;
 
+GLfloat wallPoints[12][2] = {
+{ TABLE_WIDTH / 2, TABLE_LENGTH / 2},
+{ TABLE_WIDTH / 2, -TABLE_LENGTH / 2 },
+{ -TABLE_WIDTH / 2, TABLE_LENGTH / 2 },
+{ -TABLE_WIDTH / 2, -TABLE_LENGTH / 2},
+{ TABLE_WIDTH / 2, TABLE_LENGTH / 2 },
+{ GOAL_LENGTH / 2, TABLE_LENGTH / 2 },
+{ -TABLE_WIDTH / 2, TABLE_LENGTH / 2 },
+{ -GOAL_LENGTH / 2, TABLE_LENGTH / 2 },
+{ TABLE_WIDTH / 2, -TABLE_LENGTH / 2 },
+{ GOAL_LENGTH / 2, -TABLE_LENGTH / 2 },
+{ -TABLE_WIDTH / 2, -TABLE_LENGTH / 2 },
+{ -GOAL_LENGTH / 2, -TABLE_LENGTH / 2 },
+};
+
 void init() {
+	aiPlayer = new Mallet();
+	aiPlayer->setColor(0.7, 0.2, 0.2);
+	aiPlayer->setParameter(MALLET_DIAMETER / 2, MALLET_HEIGHT);
+	aiPlayer->setPosition(0, TABLE_HEIGHT / 2, MALLET_DIAMETER - TABLE_LENGTH / 2);
+
+	player = new Mallet();
+	player->setColor(0.2, 0.7, 0.2);
+	player->setParameter(MALLET_DIAMETER / 2, MALLET_HEIGHT);
+	player->setPosition(0, TABLE_HEIGHT / 2, TABLE_LENGTH / 2 - MALLET_DIAMETER);
+
+	puck = new Puck();
+	puck->setColor(0.2, 0.2, 0.7);
+	puck->setParameter(PUCK_DIAMETER / 2, PUCK_HEIGHT);
+	puck->setPosition(0, TABLE_HEIGHT / 2, 0);
+	puck->addMallet(player);
+	puck->addMallet(aiPlayer);
+
+	for (size_t i = 0; i < 12; i+=2)
+	{
+		Wall* wall = new Wall(wallPoints[i][0], wallPoints[i][1], wallPoints[i+1][0], wallPoints[i+1][1]);
+		puck->addWall(wall);
+	}
+
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -156,7 +195,7 @@ void drawWall() {
 	glPushMatrix();
 	// table wall on the ground
 	glColor3d(0.2, 0.2, 0.2);
-	glTranslated(0, 0, -(TABLE_LENGTH - WALL_THICK) / 2.0);
+	glTranslated(0, 0, -(TABLE_LENGTH + WALL_THICK) / 2.0);
 	drawCube(TABLE_WIDTH + 2 * WALL_THICK, TABLE_HEIGHT, WALL_THICK);
 	// table edge on the wall with Goal
 	glColor3d(0.6, 0.6, 0.6);
@@ -289,23 +328,6 @@ void onTimer(int) {
 
 int main(int argc, char **argv) {
 	srand((unsigned)time(NULL));
-	aiPlayer = new Mallet(TABLE_HEIGHT);
-	aiPlayer->setColor(0.7, 0.2, 0.2);
-	aiPlayer->setParameter(MALLET_DIAMETER / 2, MALLET_HEIGHT);
-	aiPlayer->setPosition(0, TABLE_HEIGHT/2, MALLET_DIAMETER - TABLE_LENGTH / 2);
-
-	player = new Mallet();
-	player->setColor(0.2, 0.7, 0.2);
-	player->setParameter(MALLET_DIAMETER / 2, MALLET_HEIGHT);
-	player->setPosition(0, TABLE_HEIGHT/2 , TABLE_LENGTH / 2 - MALLET_DIAMETER);
-
-	puck = new Puck();
-	puck->setColor(0.2, 0.2, 0.7);
-	puck->setParameter(PUCK_DIAMETER / 2, PUCK_HEIGHT);
-	puck->setPosition(0, TABLE_HEIGHT/2, 0);
-	puck->addMallet(player);
-	puck->addMallet(aiPlayer);
-
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowPosition(200, 200);

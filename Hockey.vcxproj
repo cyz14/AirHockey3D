@@ -123,6 +123,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mallet.cpp" />
     <ClCompile Include="Puck.cpp" />
+    <ClCompile Include="Vector2d.cpp" />
+    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -132,6 +134,8 @@
     <ClInclude Include="color.h" />
     <ClInclude Include="Mallet.h" />
     <ClInclude Include="Puck.h" />
+    <ClInclude Include="Vector2d.h" />
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="floor.bmp" />
