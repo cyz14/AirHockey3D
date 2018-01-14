@@ -200,8 +200,7 @@ void display() {
 	drawWall();
 	player->draw();
 	aiPlayer->draw();
-	// to do
-	// puck->draw();
+	puck->draw();
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -295,7 +294,9 @@ int main(int argc, char **argv) {
 	player->setPosition(0, TABLE_HEIGHT/2 , TABLE_LENGTH / 2 - MALLET_DIAMETER);
 
 	puck = new Puck();
-	puck->setPosition(0, TABLE_HEIGHT, TABLE_LENGTH/2);
+	puck->setColor(0.2, 0.2, 0.7);
+	puck->setParameter(PUCK_DIAMETER / 2, PUCK_HEIGHT);
+	puck->setPosition(0, TABLE_HEIGHT/2, 0);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
