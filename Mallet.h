@@ -18,6 +18,9 @@ public:
 	Mallet(GLfloat a_x, GLfloat a_y, GLfloat a_z);
 	~Mallet();
 
+	GLfloat getX() { return x; }
+	GLfloat getZ() { return z; }
+	GLfloat getRadius() { return radius; }
 	void setParameter(GLfloat aRadius, GLfloat aHeight);
 	void setPosition(GLfloat a_x, GLfloat a_z);
 	void setPosition(GLfloat a_x, GLfloat a_y, GLfloat a_z);

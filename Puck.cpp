@@ -1,3 +1,4 @@
+#include <cmath>
 #include "Puck.h"
 
 Puck::Puck()
@@ -29,6 +30,21 @@ void Puck::draw() {
 }
 
 void Puck::move() {
+	// Collision detection with mallets
+	for (Mallet *m : mallets) {
+		GLfloat mx = m->getX();
+		GLfloat mz = m->getZ();
+		GLfloat mradius = m->getRadius();
+		GLfloat L2 = (mx - x) * (mx - x) + (mz - z) * (mz - z);
+		if (L2 < (radius + mradius) * (radius + mradius)) {
+			dx = x - mx;
+			dz = z - mz;
+			dx = dx * SPEED / sqrt(L2);
+			dz = dz * SPEED / sqrt(L2);
+		}
+	}
+
+	// Move on
     x += dx;
     z += dz;
 }
@@ -48,4 +64,8 @@ void Puck::setColor(GLdouble a_r, GLdouble a_g, GLdouble a_b) {
     r = a_r;
     g = a_g;
     b = a_b;
+}
+
+void Puck::addMallet(Mallet *mallet) {
+	mallets.push_back(mallet);
 }

@@ -303,6 +303,8 @@ int main(int argc, char **argv) {
 	puck->setColor(0.2, 0.2, 0.7);
 	puck->setParameter(PUCK_DIAMETER / 2, PUCK_HEIGHT);
 	puck->setPosition(0, TABLE_HEIGHT/2, 0);
+	puck->addMallet(player);
+	puck->addMallet(aiPlayer);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
