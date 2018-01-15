@@ -3,6 +3,14 @@
 陈雅正 学号：2014011423
 高童   学号：2014011357
 
+## Game Play
+
+Use mouse to control your mallet.
+
+Use keyborad w,a,s,d keys to control camera view position.
+
+When win or lose, press Enter key to continue.
+
 ## 开发环境
 
 OS: Windows 10  
