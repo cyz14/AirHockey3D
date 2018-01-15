@@ -83,6 +83,11 @@ void Puck::setColor(GLdouble a_r, GLdouble a_g, GLdouble a_b) {
     b = a_b;
 }
 
+void Puck::resetDirection() {
+	dx = 0.0f;
+	dz = -SPEED;
+}
+
 void Puck::addMallet(Mallet *mallet) {
 	mallets.push_back(mallet);
 }

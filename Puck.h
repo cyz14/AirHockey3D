@@ -33,6 +33,7 @@ public:
 	void setPosition(GLfloat ax, GLfloat ay, GLfloat az);
 	void setParameter(GLfloat aRadius, GLfloat aHeight);
 	void setColor(GLdouble a_r, GLdouble a_g, GLdouble a_b);
+	void resetDirection();
 
 	void addMallet(Mallet*);
 	void addWall(Wall*);

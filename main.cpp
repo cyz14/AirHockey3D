@@ -88,21 +88,18 @@ GLfloat goalPoints[4][2] = {
 {-TABLE_WIDTH / 2, -(TABLE_LENGTH / 2 + PUCK_DIAMETER)},
 };
 
-void init() {
+void gameInit() {
 	aiPlayer = new Mallet();
 	aiPlayer->setColor(0.7, 0.2, 0.2);
 	aiPlayer->setParameter(MALLET_DIAMETER / 2, MALLET_HEIGHT);
-	aiPlayer->setPosition(0, TABLE_HEIGHT / 2, MALLET_DIAMETER - TABLE_LENGTH / 2);
 
 	player = new Mallet();
 	player->setColor(0.2, 0.7, 0.2);
 	player->setParameter(MALLET_DIAMETER / 2, MALLET_HEIGHT);
-	player->setPosition(0, TABLE_HEIGHT / 2, TABLE_LENGTH / 2 - MALLET_DIAMETER);
 
 	puck = new Puck();
 	puck->setColor(0.2, 0.2, 0.7);
 	puck->setParameter(PUCK_DIAMETER / 2, PUCK_HEIGHT);
-	puck->setPosition(0, TABLE_HEIGHT / 2, 0);
 	puck->addMallet(player);
 	puck->addMallet(aiPlayer);
 
@@ -117,7 +114,9 @@ void init() {
 		Wall* goal = new Wall(goalPoints[i][0], goalPoints[i][1], goalPoints[i + 1][0], goalPoints[i + 1][1]);
 		puck->addGoal(goal);
 	}
+}
 
+void glInit() {
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -156,6 +155,14 @@ void init() {
 	glEnable(GL_AUTO_NORMAL);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_COLOR_MATERIAL);
+}
+
+void gameRestart() {
+	gameEnd = 0;
+	aiPlayer->setPosition(0, TABLE_HEIGHT / 2, MALLET_DIAMETER - TABLE_LENGTH / 2);
+	player->setPosition(0, TABLE_HEIGHT / 2, TABLE_LENGTH / 2 - MALLET_DIAMETER);
+	puck->setPosition(0, TABLE_HEIGHT / 2, 0);
+	puck->resetDirection();
 }
 
 void drawCube(GLfloat x, GLfloat y, GLfloat z) {
@@ -278,6 +285,9 @@ void keyboardFunc(unsigned char key, int x, int y) {
 	case 27: case 'q': case 'Q':
 		exit(0);
 		break;
+	case 13:
+		gameRestart();
+		break;
 	case 'a':
 		angle += 10.0f;
 		if (angle > 90.0) angle = 90.0;
@@ -352,7 +362,9 @@ int main(int argc, char **argv) {
 	glutInitWindowPosition(200, 200);
 	glutInitWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	glutCreateWindow("Air Hockey 3D");
-	init();
+	glInit();
+	gameInit();
+	gameRestart();
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboardFunc);
