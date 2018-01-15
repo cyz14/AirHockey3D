@@ -30,7 +30,7 @@ void Puck::draw() {
     glPopMatrix();
 }
 
-void Puck::move() {
+int Puck::move() {
 	// Collision detection with mallets
 	for (Mallet *m : mallets) {
 		GLfloat mx = m->getX();
@@ -53,9 +53,17 @@ void Puck::move() {
 		}
 	}
 
+	// Collision detection with goals
+	for (size_t i = 0; i < goals.size(); ++i) {
+		if (this->collide(goals[i])) {
+			return i + 1;
+		}
+	}
+
 	// Move on
     x += dx;
     z += dz;
+    return 0;
 }
 
 void Puck::setPosition(GLfloat ax, GLfloat ay, GLfloat az) {
@@ -81,6 +89,10 @@ void Puck::addMallet(Mallet *mallet) {
 
 void Puck::addWall(Wall* wall) {
 	walls.push_back(wall);
+}
+
+void Puck::addGoal(Wall* goal) {
+	goals.push_back(goal);
 }
 
 bool Puck::collide(Wall* w) {

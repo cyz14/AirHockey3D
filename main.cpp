@@ -64,6 +64,8 @@ const GLfloat MIN_MALLET_Z = (MALLET_DIAMETER) / 2;
 GLuint floorTexture;
 BMP* floorBMP;
 
+size_t gameEnd = 0;
+
 GLfloat wallPoints[12][2] = {
 { TABLE_WIDTH / 2, TABLE_LENGTH / 2},
 { TABLE_WIDTH / 2, -TABLE_LENGTH / 2 },
@@ -77,6 +79,13 @@ GLfloat wallPoints[12][2] = {
 { GOAL_LENGTH / 2, -TABLE_LENGTH / 2 },
 { -TABLE_WIDTH / 2, -TABLE_LENGTH / 2 },
 { -GOAL_LENGTH / 2, -TABLE_LENGTH / 2 },
+};
+
+GLfloat goalPoints[4][2] = {
+{TABLE_WIDTH / 2, TABLE_LENGTH / 2 + PUCK_DIAMETER},
+{-TABLE_WIDTH / 2, TABLE_LENGTH / 2 + PUCK_DIAMETER},
+{TABLE_WIDTH / 2, -(TABLE_LENGTH / 2 + PUCK_DIAMETER)},
+{-TABLE_WIDTH / 2, -(TABLE_LENGTH / 2 + PUCK_DIAMETER)},
 };
 
 void init() {
@@ -101,6 +110,12 @@ void init() {
 	{
 		Wall* wall = new Wall(wallPoints[i][0], wallPoints[i][1], wallPoints[i+1][0], wallPoints[i+1][1]);
 		puck->addWall(wall);
+	}
+
+	for (size_t i = 0; i < 4; i += 2)
+	{
+		Wall* goal = new Wall(goalPoints[i][0], goalPoints[i][1], goalPoints[i + 1][0], goalPoints[i + 1][1]);
+		puck->addGoal(goal);
 	}
 
 	glShadeModel(GL_SMOOTH);
@@ -311,8 +326,10 @@ void mouseFunc(int x, int y) {
 	playerX = min(playerX, MAX_MALLET_X);
 	playerZ = max(playerZ, MIN_MALLET_Z);
 	playerZ = min(playerZ, MAX_MALLET_Z);
-
-	player->update(playerX, playerZ, puck->getX(), puck->getY(), puck->getRadius());
+	
+	if (gameEnd == 0) {
+		player->update(playerX, playerZ, puck->getX(), puck->getY(), puck->getRadius());
+	}
 	glutPostRedisplay();
 }
 
@@ -321,7 +338,9 @@ void idleFunc() {
 }
 
 void onTimer(int) {
-	puck->move();
+	if (gameEnd == 0) {
+		gameEnd = puck->move();
+	}
 	glutPostRedisplay();
 	glutTimerFunc(16, onTimer, 1);
 }

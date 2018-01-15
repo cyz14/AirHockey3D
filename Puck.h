@@ -15,7 +15,7 @@ class Puck
 	GLfloat dx, dz;
 	GLUquadricObj* objCylinder, *objDisk;
 	std::vector<Mallet*> mallets;
-	std::vector<Wall*> walls;
+	std::vector<Wall*> walls, goals;
 
 	GLint SLICES_NUMBER = 20, STACKS_NUMBER = 10;
 	GLfloat SPEED = 0.03f;
@@ -25,7 +25,7 @@ public:
 	~Puck();
 
 	void draw();
-	void move();
+	int move();
 	GLfloat getX() { return x; }
 	GLfloat getY() { return y; }
 	GLfloat getZ() { return z; }
@@ -36,6 +36,7 @@ public:
 
 	void addMallet(Mallet*);
 	void addWall(Wall*);
+	void addGoal(Wall*);
 
 	bool collide(Wall* w);
 	void reflect(Wall* w);
