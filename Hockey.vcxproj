@@ -120,7 +120,6 @@
   <ItemGroup>
     <ClCompile Include="ai.cpp" />
     <ClCompile Include="BMP.cpp" />
-    <ClCompile Include="color.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mallet.cpp" />
     <ClCompile Include="Puck.cpp" />
@@ -132,7 +131,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BMP.h" />
-    <ClInclude Include="color.h" />
     <ClInclude Include="Mallet.h" />
     <ClInclude Include="Puck.h" />
     <ClInclude Include="Vector2d.h" />

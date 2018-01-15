@@ -14,7 +14,7 @@ void aiMove(GLfloat time, Mallet* ai, Puck* puck) {
 	Vector2d puckDir = puck->getMoveDirection();
 	GLfloat puckSpeed = puck->getSpeed();
 	GLfloat step = 0.0f;
-	GLfloat x = 0.0f;
+	GLfloat x = ai->getX();
 	GLfloat z = ai->getZ();
 
 	if (puck->getX() > x) {
@@ -24,7 +24,7 @@ void aiMove(GLfloat time, Mallet* ai, Puck* puck) {
 	{
 		step = -puckSpeed * time;
 	}
-	x += step;
+	x += step * (rand() % 10) / 10;
 	if (x > MAX_AI_X) x = MAX_AI_X;
 	if (x < MIN_AI_X) x = MIN_AI_X;
 	z += step * (rand() % 10) / 10;

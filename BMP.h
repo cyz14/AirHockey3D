@@ -2,7 +2,6 @@
 #ifndef BMP_H
 #define BMP_H
 
-#include"color.h"
 #include <Windows.h>
 #include <GL/GL.h>
 #include <GL/GLU.h>
@@ -63,14 +62,10 @@ public:
 	void Allocate(int H, int W);
 	int GetH() { return strInfo.biHeight; }
 	int GetW() { return strInfo.biWidth; }
-	// Color GetColor( int i , int j ) { return Color( ima[i][j].red , ima[i][j].green , ima[i][j].blue ) / 256; }
-	// void SetColor( int i , int j , Color );
 
 	void Initialize( int H , int W );
 	void Input( std::string file );
-	// void Output( std::string file );
 	GLubyte* GetPixels();
-	// Color GetSmoothColor( double u , double v );
 };
 
 #endif
