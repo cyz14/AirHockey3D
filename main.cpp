@@ -23,13 +23,17 @@ const GLuint SCREEN_WIDTH = 480;
 const GLuint SCREEN_HEIGHT = 480;
 
 const GLfloat TABLE_WIDTH = 2.0f;  // x
-const GLfloat TABLE_LENGTH = 4.0f; // y
-const GLfloat TABLE_HEIGHT = 4.0f; // z
+const GLfloat TABLE_HEIGHT = 4.0f; // y
+const GLfloat TABLE_LENGTH = 4.0f; // z
 
 GLfloat eye[] = { 0.0, TABLE_HEIGHT * 1.5, 6.0 };
 GLfloat to[] = { 0.0, 0, -TABLE_LENGTH / 2.0 };
 GLfloat up[] = { 0.0f, 3.0f, -1.0f };
-GLfloat angle = 0.0;
+GLfloat xAngle = 0.0;
+GLfloat yAngle = 0.0;
+
+const GLfloat MAX_X_ANGLE = 30.0;
+const GLfloat MIN_X_ANGLE = 0.0;
 
 const GLfloat GOAL_LENGTH = 0.8f;
 
@@ -55,6 +59,7 @@ Mallet* player;
 Mallet* aiPlayer;
 GLfloat playerX, playerZ;
 
+// Valid range of mallet's moving area
 const GLfloat MAX_MALLET_X = (TABLE_WIDTH - MALLET_DIAMETER) / 2;
 const GLfloat MIN_MALLET_X = - MAX_MALLET_X;
 
@@ -65,6 +70,11 @@ GLuint floorTexture;
 BMP* floorBMP;
 
 size_t gameEnd = 0;
+const int PLAYER_LOSE = 1;
+const int PLAYER_WIN = 2;
+const char* winLabel = "You Win!";
+const char* loseLabel = "You Lose!";
+const char* tryAgainLabel = "Press Enter to try again";
 
 GLfloat wallPoints[12][2] = {
 { TABLE_WIDTH / 2, TABLE_LENGTH / 2},
@@ -82,10 +92,10 @@ GLfloat wallPoints[12][2] = {
 };
 
 GLfloat goalPoints[4][2] = {
-{TABLE_WIDTH / 2, TABLE_LENGTH / 2 + PUCK_DIAMETER},
-{-TABLE_WIDTH / 2, TABLE_LENGTH / 2 + PUCK_DIAMETER},
-{TABLE_WIDTH / 2, -(TABLE_LENGTH / 2 + PUCK_DIAMETER)},
-{-TABLE_WIDTH / 2, -(TABLE_LENGTH / 2 + PUCK_DIAMETER)},
+{TABLE_WIDTH / 2, TABLE_LENGTH / 2},
+{-TABLE_WIDTH / 2, TABLE_LENGTH / 2},
+{TABLE_WIDTH / 2, -(TABLE_LENGTH / 2)},
+{-TABLE_WIDTH / 2, -(TABLE_LENGTH / 2)},
 };
 
 void gameInit() {
@@ -249,16 +259,48 @@ void drawTable() {
 	glPopMatrix();
 }
 
+void drawLabel() {
+	glPushMatrix();
+	// glViewport(0, 0, SCREEN_WIDTH, SCREEN_WIDTH);
+	if (gameEnd == 0) {
+		return;
+	}
+	else if (gameEnd == PLAYER_LOSE) {
+		glRasterPos3d(-0.5, TABLE_HEIGHT * 0.75, 1);
+		glColor3d(0.1, 0.8, 0.1);
+		for (int i = 0; i < strlen(loseLabel); i++) {
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, loseLabel[i]);
+		}
+	}
+	else if (gameEnd == PLAYER_WIN) {
+		glRasterPos3f(-0.5, TABLE_HEIGHT * 0.75, 1);
+		glColor3d(0.8, 0.1, 0.1);
+		for (int i = 0; i < strlen(winLabel); i++) {
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, winLabel[i]);
+		}
+	}
+
+	glRasterPos3f(-0.6, TABLE_HEIGHT * 0.75 - 0.2, 1);
+	for (int i = 0; i < strlen(tryAgainLabel); i++) {
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, tryAgainLabel[i]);
+	}
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	return;
+}
+
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	
 	glLoadIdentity();
 	gluLookAt(eye[0], eye[1], eye[2], to[0], to[1], to[2], up[0], up[1], up[2]);
-	glRotatef(angle, 0, 1, 0);
+	glRotatef(yAngle, 0, 1, 0);
+	glRotatef(xAngle, 1, 0, 0);
 	drawFloor();
 	drawTable();
 	drawWall();
+	drawLabel();
 	player->draw();
 	aiPlayer->draw();
 	puck->draw();
@@ -289,15 +331,27 @@ void keyboardFunc(unsigned char key, int x, int y) {
 		gameRestart();
 		break;
 	case 'a':
-		angle += 10.0f;
-		if (angle > 90.0) angle = 90.0;
+		yAngle += 10.0f;
+		if (yAngle > 90.0) yAngle = 90.0;
 		break;
 	case'd':
-		angle -= 10.0f;
-		if (angle < -90.0) angle = -90.0;
+		yAngle -= 10.0f;
+		if (yAngle < -90.0) yAngle = -90.0;
+		break;
+	case 'w':
+		xAngle += 10.0f;
+		if (xAngle > MAX_X_ANGLE) xAngle = MAX_X_ANGLE;
+		break;
+	case 's':
+		xAngle -= 10.0f;
+		if (xAngle < MIN_X_ANGLE) xAngle = MIN_X_ANGLE;
 		break;
 	default:
 		break;
+	}
+	if (gameEnd) {
+		yAngle = 0;
+		xAngle = 10;
 	}
 	glutPostRedisplay();
 }
@@ -315,7 +369,8 @@ void mouseFunc(int x, int y) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(eye[0], eye[1], eye[2], to[0], to[1], to[2], up[0], up[1], up[2]);
-	glRotated(angle, 0, 1, 0);
+	glRotatef(yAngle, 0, 1, 0);
+	glRotatef(xAngle, 1, 0, 0);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 100);
