@@ -260,12 +260,12 @@ void drawTable() {
 }
 
 void drawLabel() {
-	glPushMatrix();
 	// glViewport(0, 0, SCREEN_WIDTH, SCREEN_WIDTH);
 	if (gameEnd == 0) {
 		return;
 	}
-	else if (gameEnd == PLAYER_LOSE) {
+	glPushMatrix();
+	if (gameEnd == PLAYER_LOSE) {
 		glRasterPos3d(-0.5, TABLE_HEIGHT * 0.75, 1);
 		glColor3d(0.1, 0.8, 0.1);
 		for (int i = 0; i < strlen(loseLabel); i++) {
@@ -349,10 +349,6 @@ void keyboardFunc(unsigned char key, int x, int y) {
 	default:
 		break;
 	}
-	if (gameEnd) {
-		yAngle = 0;
-		xAngle = 10;
-	}
 	glutPostRedisplay();
 }
 
@@ -407,6 +403,10 @@ extern void aiMove(GLfloat, Mallet*, Puck*);
 void onTimer(int) {
 	if (gameEnd == 0) {
 		gameEnd = puck->move();
+		if (gameEnd) {
+			yAngle = 0;
+			xAngle = 10;
+		}
  		aiMove(16.0f, aiPlayer, puck);
 	}
 	glutPostRedisplay();
