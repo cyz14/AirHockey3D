@@ -22,9 +22,9 @@ using namespace std;
 const GLuint SCREEN_WIDTH = 480;
 const GLuint SCREEN_HEIGHT = 480;
 
-const GLfloat TABLE_WIDTH = 2.0f;  // x
-const GLfloat TABLE_HEIGHT = 4.0f; // y
-const GLfloat TABLE_LENGTH = 4.0f; // z
+extern const GLfloat TABLE_WIDTH = 2.0f;  // x
+extern const GLfloat TABLE_HEIGHT = 4.0f; // y
+extern const GLfloat TABLE_LENGTH = 4.0f; // z
 
 GLfloat eye[] = { 0.0, TABLE_HEIGHT * 1.5, 6.0 };
 GLfloat to[] = { 0.0, 0, -TABLE_LENGTH / 2.0 };
@@ -43,7 +43,7 @@ const GLfloat WALL_HEIGHT = 0.1f;
 const GLfloat PUCK_DIAMETER = 0.2f;
 const GLfloat PUCK_HEIGHT = 0.1f;
 
-const GLfloat MALLET_DIAMETER = 0.3f;
+extern const GLfloat MALLET_DIAMETER = 0.3f;
 const GLfloat MALLET_HEIGHT = 0.1f;
 
 GLfloat light_ambient[] = {0.5f, 0.5f, 0.5f, 1.0f};
@@ -60,11 +60,11 @@ Mallet* aiPlayer;
 GLfloat playerX, playerZ;
 
 // Valid range of mallet's moving area
-const GLfloat MAX_MALLET_X = (TABLE_WIDTH - MALLET_DIAMETER) / 2;
-const GLfloat MIN_MALLET_X = - MAX_MALLET_X;
+extern const GLfloat MAX_MALLET_X = (TABLE_WIDTH - MALLET_DIAMETER) / 2;
+extern const GLfloat MIN_MALLET_X = - MAX_MALLET_X;
 
-const GLfloat MAX_MALLET_Z = (TABLE_LENGTH - MALLET_DIAMETER) / 2;
-const GLfloat MIN_MALLET_Z = (MALLET_DIAMETER) / 2;
+extern const GLfloat MAX_MALLET_Z = (TABLE_LENGTH - MALLET_DIAMETER) / 2;
+extern const GLfloat MIN_MALLET_Z = (MALLET_DIAMETER) / 2;
 
 GLuint floorTexture;
 BMP* floorBMP;
@@ -92,10 +92,10 @@ GLfloat wallPoints[12][2] = {
 };
 
 GLfloat goalPoints[4][2] = {
-{TABLE_WIDTH / 2, TABLE_LENGTH / 2},
-{-TABLE_WIDTH / 2, TABLE_LENGTH / 2},
-{TABLE_WIDTH / 2, -(TABLE_LENGTH / 2)},
-{-TABLE_WIDTH / 2, -(TABLE_LENGTH / 2)},
+{GOAL_LENGTH / 2, TABLE_LENGTH / 2},
+{-GOAL_LENGTH / 2, TABLE_LENGTH / 2},
+{GOAL_LENGTH / 2, -(TABLE_LENGTH / 2)},
+{-GOAL_LENGTH / 2, -(TABLE_LENGTH / 2)},
 };
 
 void gameInit() {
@@ -402,9 +402,12 @@ void idleFunc() {
 
 }
 
+extern void aiMove(GLfloat, Mallet*, Puck*);
+
 void onTimer(int) {
 	if (gameEnd == 0) {
 		gameEnd = puck->move();
+ 		aiMove(16.0f, aiPlayer, puck);
 	}
 	glutPostRedisplay();
 	glutTimerFunc(16, onTimer, 1);

@@ -1,7 +1,11 @@
 #pragma once
+#ifndef MALLET_H
+#define MALLET_H
+
 #include <Windows.h>
 #include <GL\GL.h>
 #include <GL\GLU.h>
+
 class Mallet
 {
 	GLfloat x, y, z;
@@ -9,8 +13,7 @@ class Mallet
 	GLfloat height;
 	GLdouble r, g, b;
 	GLUquadricObj* objCylinder, *objDisk;
-
-    GLint SLICES_NUMBER = 20, STACKS_NUMBER = 10;
+	GLint SLICES_NUMBER = 20, STACKS_NUMBER = 10;
 
 public:
 	Mallet();
@@ -29,3 +32,4 @@ public:
 	void update(GLfloat newx, GLfloat newz, GLfloat px, GLfloat pz, GLfloat pr);
 };
 
+#endif // !MALLET_H

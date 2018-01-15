@@ -36,6 +36,9 @@
     <ClCompile Include="Vector2d.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ai.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

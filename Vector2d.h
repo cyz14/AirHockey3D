@@ -1,4 +1,7 @@
 #pragma once
+#ifndef VECTOR2D_H
+#define VECTOR2D_H
+
 class Vector2d
 {
 	double x, y;
@@ -12,11 +15,13 @@ public:
 	double dot(Vector2d op);
 	double getX() { return x; }
 	double getY() { return y; }
+	Vector2d getUnitVector() { return *this / norm(); }
 	friend Vector2d operator + (const Vector2d& v1, const Vector2d& v2) { return Vector2d(v1.x + v2.x, v1.y + v2.y); }
 	friend Vector2d operator - (const Vector2d& v1, const Vector2d& v2) { return Vector2d(v1.x - v2.x, v1.y - v2.y); }
 	friend Vector2d operator * (const Vector2d& v1, const double& d) { return Vector2d(v1.x * d, v1.y * d); }
 	friend Vector2d operator / (const Vector2d& v1, const double& d) { return Vector2d(v1.x / d, v1.y / d); }
-	friend Vector2d operator * (const double& d,    const Vector2d& v1) { return Vector2d(v1.x * d, v1.y * d); }
+	friend Vector2d operator * (const double& d, const Vector2d& v1) { return Vector2d(v1.x * d, v1.y * d); }
 	~Vector2d();
 };
 
+#endif // !VECTOR2D_H

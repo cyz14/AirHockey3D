@@ -118,6 +118,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ai.cpp" />
     <ClCompile Include="BMP.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="main.cpp" />

@@ -106,13 +106,13 @@ bool Puck::collide(Wall* w) {
 	GLdouble b = -(px * w->getDirX() + pz * w->getDirZ());
 	GLdouble det = b * b - (px * px + pz * pz) + radius * radius;
 
-	if (det > 1e-6) {
+	if (det > EPS) {
 		det = sqrt(det);
 		GLdouble t1 = b - det, t2 = b + det;
-		if (t1 > 1e-6 && t1 < w->getMaxT()) {
+		if (t1 > EPS && t1 < w->getMaxT()) {
 			return true;
 		}
-		if (t2 > 1e-6 && t2 < w->getMaxT()){
+		if (t2 > EPS && t2 < w->getMaxT()){
 			return true;
 		}
 	}
