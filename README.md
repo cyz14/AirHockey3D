@@ -9,6 +9,8 @@ Use mouse to control your mallet.
 
 Use keyborad w,a,s,d keys to control camera view position.
 
+Press G or g key will lose.
+
 When win or lose, press Enter key to continue.
 
 ## 开发环境
@@ -26,6 +28,7 @@ Language: C++ (OpenGL)
 > * Control Camera View
 > * Game Logic
 >   - Get Mouse position
+>   - Keyboard control. Press Key 'G'/'g' will lose.
 >   - AI control mallet
 >   - Show game info (Win of Lose, press enter to try again)
 

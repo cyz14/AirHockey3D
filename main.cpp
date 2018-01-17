@@ -327,6 +327,9 @@ void keyboardFunc(unsigned char key, int x, int y) {
 	case 27: case 'q': case 'Q':
 		exit(0);
 		break;
+	case 'g': case 'G':
+		gameEnd = PLAYER_LOSE; // GG
+		break;
 	case 13:
 		gameRestart();
 		break;
