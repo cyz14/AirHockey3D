@@ -1,7 +1,7 @@
 # 3D Hockey Game 
 
-陈雅正 学号：2014011423
-高童   学号：2014011357
+Yazheng Chen 2014011423
+Tong Gao 2014011357
 
 ## Game Play
 
